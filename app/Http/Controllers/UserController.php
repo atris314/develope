@@ -2,19 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\frontmodels\Photo;
-use App\frontmodels\Product;
-use App\frontmodels\Coupon;
-use App\frontmodels\Protranslate;
 use App\Mail\ContactSent;
 use App\Mail\ProfileEdit;
-use App\frontmodels\Banneruser;
-use App\frontmodels\Ad;
-use App\Models\Message;
 use App\Notifications\Couponsent;
 use Ghasedak\GhasedakApi;
 use Illuminate\Http\Request;
-use App\frontmodels\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -33,8 +25,7 @@ class UserController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $coupon = Coupon::where('status' , 1)->first();
-        return view('front.dashboard.dashboard',compact('user','coupon'));
+        return view('front.dashboard.dashboard',compact('user'));
     }
 
     /**
@@ -58,40 +49,7 @@ class UserController extends Controller
 
     }
 
-    public function rateToCoupon(Request $request)
-    {
-        $messages = [
-            'rate.required' => ' لطفا اگر کوپن تخفیف دارید وارد نمایید',
-        ];
-        $validateData = $request->validate([
-            'rate' => 'required',
-        ], $messages);
 
-        $coupon = new Coupon();
-        if (Auth::user()->rate>=50) {
-            $user = Auth::user();
-            $rate = $user->rate;
-            $coupon->code = $rate+rand();
-            $coupon->price = $rate*1000;
-            $coupon->title = $user->name;
-            $coupon->status = 1;
-
-            //$coupon->user()->attach($coupon);
-            //dd($coupon);
-            try{
-                $coupon->save();
-            }catch (Exception $exception){
-                return back()->with('warning',$exception->getCode());
-            }
-            $msg ='امتیاز شما با موفقیت به کد تخفیف تبدیل شد' ;
-            return back()->with('success',$msg);
-        }
-        else{
-            $msg = 'امتیاز شما برای تبدیل به کد تخفیف کم است' ;
-            return back()->with('warning',$msg);
-        }
-
-    }
 
     /**
      * Display the specified resource.
@@ -182,25 +140,7 @@ class UserController extends Controller
         $coupon = Coupon::where('title','تخفیف منبع یابی')->first();
         Notification::send($users , new Couponsent($coupon));
 
-//        $site = 'yabane.ir';
-//        if ($user->mobile){
-//            try{
-//                $receptor = $user->mobile;
-//                $type = 1;
-//                $template = "Couponsent";
-//                $param1 = $user->name;
-//                $param2 = $coupon->code;
-//
-//                $api = new GhasedakApi(env('GHASEDAKAPI_KEY'));
-//                $api->Verify($receptor, $type, $template, $param1,$param2);
-//            }
-//            catch(\Ghasedak\Exceptions\ApiException $e){
-//                echo $e->errorMessage();
-//            }
-//            catch(\Ghasedak\Exceptions\HttpException $e){
-//                echo $e->errorMessage();
-//            }
-//        }
+
         try{
             $user->update();
         }catch (Exception $exception){
@@ -229,70 +169,4 @@ class UserController extends Controller
     {
         //
     }
-
-    public function dashboard()
-    {
-        $user = Auth::user();
-        $coupon = Coupon::where('status' , 1)->orderBy('created_at','DESC')->first();
-        $bannerusers = Banneruser::first();
-        $ads = Ad::orderBy('id','DESC')->paginate(2);
-        $adset = Ad::first();
-
-//        if ($user) {
-//            for($i=0; $i<count($products); $i++) {
-//                $messages = Message::with('product')->where('product_id', $products[$i]->id)->where('read', 0)->get();
-//                $messageset = Message::with('product')->where('product_id', $products[$i]->id)->where('read', 0)->first();
-//
-//            }
-//
-//        }
-        if ($user){
-            $messages = Message::with('product')->where('read', 0)->get();
-            $messageset = Message::where('read', 0)->first();
-        }
-
-
-//            $product = Product::whereIn('id', $messages)->where('user_id', $user->id)
-//                ->where('status', 12)
-//                ->where('status', '<>', 7)
-//                ->where('status', '<>', 11)
-//                ->where('status', '<>', 10)
-//                ->where('status', '<>', 9)
-//                ->where('status', '<>', 8)
-//                ->where('status', '<>', 5)
-//                ->where('status', '<>', 4)
-//                ->where('status', '<>', 3)->get();
-//        dd($product);
-        return view('front.dashboard.dashboard',compact('user','coupon','bannerusers','ads','adset','messages','messageset'));
-
-    }
-    public function notification()
-    {
-        $user = Auth::user();
-        $notifications = auth()->user()->notifications;
-        $notifications ->markAsread();
-       // dd($notifications);
-        return view('front.dashboard.notifications',compact('notifications','user'));
-    }
-
-
-
-
-
-//    public function userNotifications()
-//    {
-//        return response()->json(\auth()->user()->unreadNotification(), Response::HTTP_OK);
-//    }
-
-    public function wallet()
-    {
-        $user = Auth::user();
-        return view('front.dashboard.wallets',compact('user'));
-    }
-    public function walletform()
-    {
-        $user = Auth::user();
-        return view('front.dashboard.wallets',compact('user'));
-    }
-
 }

@@ -13266,7 +13266,7 @@ a:hover{
     }
 
     .menu-item {
-        position: relative;
+        position: fixed;
         width: 60px;
         height: 30px;
         left: 77px;
@@ -15688,7 +15688,7 @@ a:hover{
     }
 
     .menu-item {
-        position: relative;
+        position: fixed;
         width: 60px;
         height: 30px;
         left: 77px;

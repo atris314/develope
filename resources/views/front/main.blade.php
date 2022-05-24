@@ -50,7 +50,7 @@
             <div class="row">
                 @foreach($portfolios as $portfolio)
                 <div class="project-works">
-                    <div class="project-title">{{$portfolio->title}} <a href="{{route('portfolio-detail',$portfolio->id)}}"><div class="project-arrow"><div class="project-arrow-rotate"></div></div></a></div>
+                    <a href="{{route('portfolio-detail',$portfolio->id)}}"><div class="project-title">{{$portfolio->title}} <a href="{{route('portfolio-detail',$portfolio->id)}}"><div class="project-arrow"><div class="project-arrow-rotate"></div></div></a></div></a>
                     <div class="project-body">
                         {!! mb_substr($portfolio->description,0,100).'...'!!}
                     </div>

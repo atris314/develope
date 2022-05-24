@@ -4,27 +4,7 @@ use App\Events\PostEvent;
 use App\Http\Controllers\back\AboutController;
 use App\Http\Controllers\back\AdminController;
 use App\Http\Controllers\back\AdminUserController;
-use App\Http\Controllers\back\CategoryController;
-use App\Http\Controllers\back\CatorderController;
-use App\Http\Controllers\back\CommentController;
-use App\Http\Controllers\back\CouponController;
-use App\Http\Controllers\back\CtaController;
-use App\Http\Controllers\back\EmailController;
-use App\Http\Controllers\back\PackController;
 use App\Http\Controllers\back\PhotoController;
-use App\Http\Controllers\back\PostController;
-use App\Http\Controllers\back\PresentController;
-use App\Http\Controllers\back\ProtranslateController;
-use App\Http\Controllers\back\ServiceController;
-use App\Http\Controllers\back\ThreadController;
-use App\Http\Controllers\back\TicketController;
-use App\Http\Controllers\front\ContactController;
-use App\Http\Controllers\front\frontController;
-use App\Http\Controllers\front\ProductController;
-use App\Http\Controllers\front\ProductPurchaseController;
-use App\Http\Controllers\front\ResidController;
-use App\Http\Controllers\front\TeammateController;
-use App\Http\Controllers\front\TeamticketController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
 use Illuminate\Auth\Events\PasswordReset;
@@ -86,12 +66,7 @@ Route::post('/reset-password', function (Request $request) {
 
 
 //back route
-
-Route::prefix('api')->group(function (){
-   Route::get('products/{id}/{sort}',[App\Http\Controllers\back\ProductController::class,'apiGetSortedProduct']);
-});
-
-Route::prefix('admin')->middleware('AdminCheck')->group(function (){
+Route::prefix('admin')->middleware('auth')->group(function (){
     Route::get('/',[App\Http\Controllers\back\AdminController::class,'index'])->name('admin');
     Route::get('/users', [App\Http\Controllers\back\AdminUserController::class, 'index'])->name('back.users');
     Route::get('/users/create', [App\Http\Controllers\back\AdminUserController::class, 'create'])->name('back.users.create');
@@ -105,7 +80,7 @@ Route::prefix('admin')->middleware('AdminCheck')->group(function (){
 
 });
 
-Route::prefix('admin/headers')->middleware('AdminCheck')->group(function (){
+Route::prefix('admin/headers')->middleware('auth')->group(function (){
     Route::get('/', [App\Http\Controllers\back\HeaderController::class, 'index'])->name('back.headers');
     Route::get('/create', [App\Http\Controllers\back\HeaderController::class, 'create'])->name('back.headers.create');
     Route::post('/store', [App\Http\Controllers\back\HeaderController::class, 'store'])->name('back.headers.store');
@@ -114,7 +89,7 @@ Route::prefix('admin/headers')->middleware('AdminCheck')->group(function (){
     Route::get('/delete/{header}', [App\Http\Controllers\back\HeaderController::class,'destroy'])->name('back.headers.destroy');
 });
 
-Route::prefix('admin/settings')->middleware('AdminCheck')->group(function (){
+Route::prefix('admin/settings')->middleware('auth')->group(function (){
     Route::get('/', [App\Http\Controllers\back\SettingController::class, 'index'])->name('back.settings');
     Route::get('/create', [App\Http\Controllers\back\SettingController::class, 'create'])->name('back.settings.create');
     Route::post('/store', [App\Http\Controllers\back\SettingController::class, 'store'])->name('back.settings.store');
@@ -124,7 +99,7 @@ Route::prefix('admin/settings')->middleware('AdminCheck')->group(function (){
 });
 
 
-Route::prefix('admin/widgets')->middleware('AdminCheck')->group(function (){
+Route::prefix('admin/widgets')->middleware('auth')->group(function (){
     Route::get('/', [App\Http\Controllers\back\WidgetController::class, 'index'])->name('back.widgets');
     Route::get('/create', [App\Http\Controllers\back\WidgetController::class, 'create'])->name('back.widgets.create');
     Route::post('/store', [App\Http\Controllers\back\WidgetController::class, 'store'])->name('back.widgets.store');
@@ -133,7 +108,7 @@ Route::prefix('admin/widgets')->middleware('AdminCheck')->group(function (){
     Route::get('/delete/{widget}', [App\Http\Controllers\back\WidgetController::class,'destroy'])->name('back.widgets.destroy');
 });
 
-Route::prefix('admin/portfolios')->middleware('AdminCheck')->group(function (){
+Route::prefix('admin/portfolios')->middleware('auth')->group(function (){
     Route::get('/', [App\Http\Controllers\back\PortfolioController::class, 'index'])->name('back.portfolios');
     Route::get('/create', [App\Http\Controllers\back\PortfolioController::class, 'create'])->name('back.portfolios.create');
     Route::post('/store', [App\Http\Controllers\back\PortfolioController::class, 'store'])->name('back.portfolios.store');
@@ -142,7 +117,7 @@ Route::prefix('admin/portfolios')->middleware('AdminCheck')->group(function (){
     Route::get('/delete/{portfolio}', [App\Http\Controllers\back\PortfolioController::class,'destroy'])->name('back.portfolios.destroy');
 });
 
-Route::prefix('admin/contacts')->middleware('AdminCheck')->group(function (){
+Route::prefix('admin/contacts')->middleware('auth')->group(function (){
     Route::get('/', [App\Http\Controllers\back\ContactController::class, 'index'])->name('back.contacts');
     Route::get('/create', [App\Http\Controllers\back\ContactController::class, 'create'])->name('back.contacts.create');
     Route::post('/store', [App\Http\Controllers\back\ContactController::class, 'store'])->name('back.contacts.store');
@@ -150,7 +125,7 @@ Route::prefix('admin/contacts')->middleware('AdminCheck')->group(function (){
     Route::put('/update/{contact}', [App\Http\Controllers\back\ContactController::class,'update'])->name('back.contacts.update');
     Route::get('/delete/{contact}', [App\Http\Controllers\back\ContactController::class,'destroy'])->name('back.contacts.destroy');
 });
-Route::prefix('admin/lists')->middleware('AdminCheck')->group(function (){
+Route::prefix('admin/lists')->middleware('auth')->group(function (){
     Route::get('/', [App\Http\Controllers\back\ListmenuController::class, 'index'])->name('back.lists');
     Route::get('/create', [App\Http\Controllers\back\ListmenuController::class, 'create'])->name('back.lists.create');
     Route::post('/store', [App\Http\Controllers\back\ListmenuController::class, 'store'])->name('back.lists.store');
@@ -160,7 +135,7 @@ Route::prefix('admin/lists')->middleware('AdminCheck')->group(function (){
 });
 
 
-Route::prefix('admin/photos')->middleware('AdminCheck')->group(function (){
+Route::prefix('admin/photos')->middleware('auth')->group(function (){
     Route::get('/', [App\Http\Controllers\back\PhotoController::class, 'index'])->name('back.photos');
     Route::get('/create', [App\Http\Controllers\back\PhotoController::class, 'create'])->name('back.photos.create');
     Route::post('/store', [App\Http\Controllers\back\PhotoController::class, 'store'])->name('back.photos.store');
