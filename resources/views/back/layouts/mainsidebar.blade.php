@@ -42,8 +42,6 @@
                     <li><a href="{{route('admin')}}"><i class="fa fa-circle-o"></i>پنل مدیریت</a></li>
                 </ul>
             </li>
-            @can('isAdmin')
-
             <li class="treeview">
                 <a href="#">
                     <i class="fa  fa-users"></i>
@@ -120,10 +118,6 @@
                 </ul>
             </li>
 
-
-            @endcan
-
-            @can('isAdmin')
             <li class="treeview">
                 <a href="#">
                     <i class="fa fa-folder"></i> <span>رسانه ها</span>
@@ -148,8 +142,6 @@
                     <li><a href="{{route('back.settings.create')}}"><i class="fa fa-plus"></i> ایجاد</a></li>
                 </ul>
             </li>
-
-            @endcan
         </ul>
     </section>
     <!-- /.sidebar -->
